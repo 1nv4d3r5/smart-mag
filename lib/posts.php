@@ -51,8 +51,8 @@ class Bunyad_Posts
 		$text = str_replace(']]>', ']]&gt;', $text);
 		
 		// get plaintext excerpt trimmed to right length
-		$excerpt = wp_trim_words($text, $length, '&hellip;' . ($add_more !== false ? $this->excerpt_read_more() : '')); 
-
+		//$excerpt = wp_trim_words($text, $length, '&hellip;' . ($add_more !== false ? $this->excerpt_read_more() : '')); 
+		$excerpt = the_content('',FALSE,'');
 
 		/*
 		 * Force "More" link?
@@ -81,7 +81,6 @@ class Bunyad_Posts
 		
 		// revert
 		$more = $old_more;
-		
 		return $excerpt;
 	}
 	
