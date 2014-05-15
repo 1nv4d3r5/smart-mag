@@ -1,5 +1,67 @@
 <?php
-
+function the_readerwall($limit_number=16){
+	if( $mostactive = get_option( 'mostactive' ) ){
+		echo $mostactive;
+	}else{
+	$comments = get_comments( array('status' => 'approve') );//获取评论
+	$my_email = get_option( 'admin_email' );
+	$mostactive = array();
+	$tmp = array();
+	$comment_date = array();
+	
+	foreach( $comments as $comment ){//计算每个人评论数
+		$author = $comment -> comment_author;
+		$email = $comment -> comment_author_email;
+		$url = $comment -> comment_author_url;
+		$date = $comment -> comment_date;
+		$comment_year = explode("-" ,$date);
+		if ( $comment_year[0] < date("Y") ){//今年的评论
+			break;
+		}
+		if( $email != $my_email ){
+			$i = -1;
+			$index = -1;
+			foreach( $mostactive as $item => $comm ){
+				if( $email == $comm["email"] ){
+					$index = $item;
+					break;
+				}
+			}
+			if( $index > -1 ){
+				$mostactive[$index]["number"] += 1;
+			}else{
+				array_push($mostactive,array( "author" => $author, "email" => $email, "url" => $url, "date" => $date, "number" => 1 ));
+			}
+		}
+	}
+	
+	//数组按评论数逆序排序
+	foreach( $mostactive as $item => $comm){
+		$tmp[$item] = $comm['number'];
+		$comment_date[$item] = $comm['date'];
+	}
+	array_multisort( $tmp, SORT_DESC, $comment_date, SORT_ASC, $mostactive );//评论数相同时按照最后评论时间升序排序
+	
+	if( empty($mostactive) ){
+		$output = '<ul><li>none data.</li></ul>';
+	}else{
+		$output = '<ul>';
+		foreach( $mostactive as $item => $comm){
+			$avatar = get_avatar($comm["email"], 90);
+			$author = $comm["author"];
+			$url = $comm["url"];
+			$number = $comm["number"];
+			$output.='<li>' . '<a href="'. $url . '" target="_blank" title="今年'. $number .'条评论">' . $avatar .'<span class="wall_name">'.$author.'</span></a></li>';
+			$limit_number--;
+			if ( $limit_number <= 0 ){
+				break;
+			}
+		}
+		$output .= '</ul>';
+	}
+	echo $output;
+	update_option('mostactive', $output);
+}}
 // already initialized? some buggy plugin call?
 if (class_exists('Bunyad_Core')) {
 	return;
@@ -180,6 +242,7 @@ class Bunyad_Theme_SmartMag
 		
 		// setup the init hook
 		add_action('init', array($this, 'init'));
+		add_action('the_readerwall',array($this,'the_readerwall'),10 , 2);
 	}
 	
 	/**
@@ -889,4 +952,68 @@ class Bunyad_Theme_SmartMag
 		
 		return $classes;
 	}
+	public function the_readerwall($limit_number=16){
+	if( $mostactive = get_option( 'mostactive' ) ){
+		echo $mostactive;
+	}else{
+		$comments = get_comments( array('status' => 'approve') );//获取评论
+		$my_email = get_option( 'admin_email' );
+		$mostactive = array();
+		$tmp = array();
+		$comment_date = array();
+		
+		foreach( $comments as $comment ){//计算每个人评论数
+			$author = $comment -> comment_author;
+			$email = $comment -> comment_author_email;
+			$url = $comment -> comment_author_url;
+			$date = $comment -> comment_date;
+			$comment_year = explode("-" ,$date);
+			if ( $comment_year[0] < date("Y") ){//今年的评论
+				break;
+			}
+			if( $email != $my_email ){
+				$i = -1;
+				$index = -1;
+				foreach( $mostactive as $item => $comm ){
+					if( $email == $comm["email"] ){
+						$index = $item;
+						break;
+					}
+				}
+				if( $index > -1 ){
+					$mostactive[$index]["number"] += 1;
+				}else{
+					array_push($mostactive,array( "author" => $author, "email" => $email, "url" => $url, "date" => $date, "number" => 1 ));
+				}
+			}
+		}
+		
+		//数组按评论数逆序排序
+		foreach( $mostactive as $item => $comm){
+			$tmp[$item] = $comm['number'];
+			$comment_date[$item] = $comm['date'];
+		}
+		array_multisort( $tmp, SORT_DESC, $comment_date, SORT_ASC, $mostactive );//评论数相同时按照最后评论时间升序排序
+		
+		if( empty($mostactive) ){
+			$output = '<ul><li>none data.</li></ul>';
+		}else{
+			$output = '<ul>';
+			foreach( $mostactive as $item => $comm){
+				$avatar = get_avatar($comm["email"], 90);
+				$author = $comm["author"];
+				$url = $comm["url"];
+				$number = $comm["number"];
+				$output.='<li>' . '<a href="'. $url . '" target="_blank" title="今年'. $number .'条评论">' . $avatar .'<span class="wall_name">'.$author.'</span></a></li>';
+				$limit_number--;
+				if ( $limit_number <= 0 ){
+					break;
+				}
+			}
+			$output .= '</ul>';
+		}
+		echo $output;
+		update_option('mostactive', $output);
+	}
+}
 }

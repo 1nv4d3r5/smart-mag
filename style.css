@@ -3282,3 +3282,37 @@ a.button:hover { text-decoration: none; }
 	.main-footer .widget_calendar { color: #606569; }
 	.main-footer .widget_calendar a { color: #19232d; }
 
+/*jiangzhouq*/
+#comments-nav{
+		
+	}
+ 
+#comments-nav a{
+		display: block;
+		float: left;
+		color: #676767;
+		padding: 0 10px;
+		margin-right: 5px;
+		background: #ebebeb;
+		line-height: 25px;
+		font-size: 13px;
+		}
+ 
+#comments-nav a:hover{background: #e54e53;color:#fff;text-decoration: none;}
+ 
+#comments-nav span.current{
+		display: block;
+		float: left;
+		color: #676767;
+		padding: 0 10px;
+		margin-right: 5px;
+		background: #e54e53;
+		line-height: 25px;
+		font-size: 13px;
+	}
+#readerwall{margin:0 0 50px 0;}
+#readerwall ul{list-style:none;margin:0;padding:0;overflow:hidden;}
+#readerwall li{float:left;margin:10px 30px;}
+#readerwall a{font-size: 12px; display:block;width:90px;height:116px;box-shadow:0 1px 1px rgba(0,0,0,0.1);}
+#readerwall img{float:left;border:0;padding:0 0 4px 0;}
+#readerwall .wall_name{display:block;text-align:center;clear:both;}

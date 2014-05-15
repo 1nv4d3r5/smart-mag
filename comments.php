@@ -19,15 +19,15 @@
 
 		<?php if (get_comment_pages_count() > 1 && get_option('page_comments')): // are there comments to navigate through ?>
 		<nav class="comment-nav">
-			<div class="nav-previous"><?php previous_comments_link(__( '&larr; Older Comments', 'bunyad')); ?></div>
-			<div class="nav-next"><?php next_comments_link(__( 'Newer Comments &rarr;', 'bunyad')); ?></div>
+			<div id="comments-nav">
+				<?php paginate_comments_links('prev_text=上一页&next_text=下一页');?>
+			<div id="comments-nav">
 		</nav>
 		<?php endif; // check for comment navigation ?>
 
 	<?php elseif (!comments_open() && ! is_page() && post_type_supports(get_post_type(), 'comments')):	?>
 		<p class="nocomments"><?php _e('Comments are closed.', 'bunyad'); ?></p>
 	<?php endif; ?>
-	
 	
 	<?php 
 	
